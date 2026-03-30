@@ -1,0 +1,130 @@
+/* ============================================
+   THITRONIK Design Tokens
+   CI-konformes Token-System
+   ============================================ */
+
+:root {
+  /* ---- Farb-Palette ---- */
+  --th-blue-primary: #1D3661;
+  --th-blue-primary-rgb: 29, 54, 97;
+  --th-blue-primary-light: #2a4a80;
+  --th-blue-primary-dark: #142847;
+
+  --th-blue-secondary: #3BA9D3;
+  --th-blue-secondary-rgb: 59, 169, 211;
+  --th-blue-secondary-light: #5FBBDD;
+  --th-blue-secondary-dark: #2E8AAD;
+
+  --th-accent-lime: #AFCA05;
+  --th-accent-lime-rgb: 175, 202, 5;
+  --th-accent-lime-light: #C5DF1A;
+  --th-accent-lime-dark: #8FA404;
+
+  --th-red-brand: #CE132D;
+  --th-red-brand-rgb: 206, 19, 45;
+
+  --gray-soft: #F0F0F0;
+  --gray-soft-rgb: 240, 240, 240;
+  --gray-medium: #D0D0D0;
+  --gray-dark: #888888;
+
+  --white: #FFFFFF;
+  --ink: #111111;
+  --ink-rgb: 17, 17, 17;
+
+  /* ---- Semantische Farben ---- */
+  --color-success: #2D8B4E;
+  --color-success-bg: #E8F5EE;
+  --color-warning: #D4A017;
+  --color-warning-bg: #FFF8E1;
+  --color-error: #CE132D;
+  --color-error-bg: #FDE8EB;
+  --color-info: #3BA9D3;
+  --color-info-bg: #E3F5FB;
+
+  /* ---- Typografie ---- */
+  --font-primary: 'Panton', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Font Weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* Font Sizes Desktop */
+  --fs-h1: 48px;
+  --fs-h2: 36px;
+  --fs-h3: 26px;
+  --fs-body: 17px;
+  --fs-body-sm: 15px;
+  --fs-caption: 13px;
+  --fs-button: 15px;
+  --fs-badge: 12px;
+
+  /* Line Heights */
+  --lh-h1: 1.15;
+  --lh-h2: 1.20;
+  --lh-h3: 1.25;
+  --lh-body: 1.60;
+  --lh-caption: 1.45;
+  --lh-button: 1.00;
+
+  /* ---- Spacing (4px System) ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ---- Radien ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+
+  /* ---- Schatten ---- */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --shadow-card: 0 2px 8px rgba(29, 54, 97, 0.06);
+  --shadow-card-hover: 0 8px 24px rgba(29, 54, 97, 0.12);
+
+  /* ---- Transitions ---- */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ---- Z-Index ---- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sidebar: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+
+  /* ---- Layout ---- */
+  --max-content: 1280px;
+  --sidebar-width: 280px;
+  --header-height: 72px;
+  --touch-target: 44px;
+}
+
+/* ---- Dark Mode (vorbereitet) ---- */
+[data-theme="dark"] {
+  --gray-soft: #1A1A2E;
+  --white: #0F0F1A;
+  --ink: #E8E8E8;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
