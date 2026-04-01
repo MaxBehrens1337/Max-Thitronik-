@@ -113,7 +113,7 @@ export default function AdminQuestionsPage() {
   if (editingQuestion) {
     return (
       <div className="admin-page">
-        <button className="btn btn-secondary" onClick={() => setEditingQuestion(null)} style={{ marginBottom: 'var(--sp-6)' }}>
+        <button className="btn btn-back" onClick={() => setEditingQuestion(null)} style={{ marginBottom: 'var(--sp-6)' }}>
           <ArrowLeft size={16} /> Zurück zur Liste
         </button>
         <h1 className="page-title">Frage Editor</h1>
@@ -247,11 +247,11 @@ export default function AdminQuestionsPage() {
           <Filter size={18} color="var(--text-tertiary)" />
           <select 
             className="input" 
-            style={{ border: 'none', background: 'transparent', padding: 0, fontWeight: '600', width: 'auto', minWidth: '200px' }}
+            style={{ border: 'none', background: 'transparent', padding: 0, fontWeight: '600', width: 'auto', minWidth: '200px', color: 'var(--th-accent-lime)' }}
             value={selectedCourseId} 
             onChange={e => setSelectedCourseId(e.target.value)}
           >
-            {courses.map(c => <option key={c.id} value={c.id}>{c.icon} {c.title}</option>)}
+            {courses.map(c => <option key={c.id} value={c.id} style={{ background: '#fff', color: '#000' }}>{c.icon} {c.title}</option>)}
           </select>
         </div>
       </div>

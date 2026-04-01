@@ -49,7 +49,7 @@ export default function CourseDetailPage() {
   return (
     <div className="course-detail-page animate-fade-in-up">
       <div className="page-header" style={{ marginBottom: 'var(--sp-6)' }}>
-        <Link href="/courses" className="btn btn-secondary" style={{ marginBottom: 'var(--sp-4)', display: 'inline-flex', padding: '6px 12px', borderRadius: '4px', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', textDecoration: 'none', alignItems: 'center', gap: '8px' }}>
+        <Link href="/courses" className="btn btn-back" style={{ marginBottom: 'var(--sp-4)', display: 'inline-flex', padding: '8px 16px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', alignItems: 'center', gap: '8px' }}>
           <ArrowLeft size={16} /> Zurück zur Übersicht
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-4)' }}>

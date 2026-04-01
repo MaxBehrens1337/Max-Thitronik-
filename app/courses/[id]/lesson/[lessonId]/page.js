@@ -123,7 +123,7 @@ export default function LessonPlayerPage() {
     return (
       <div className="quiz-player-page animate-fade-in-up" style={{ maxWidth: '900px', margin: '0 auto', paddingTop: 'var(--sp-6)' }}>
         <div style={{ marginBottom: 'var(--sp-8)' }}>
-          <Link href={`/courses/${data.course.id}`} className="btn btn-secondary" style={{ padding: '6px 12px' }}>
+          <Link href={`/courses/${data.course.id}`} className="btn btn-back" style={{ padding: '8px 16px' }}>
             <ArrowLeft size={16} /> Abbruch
           </Link>
         </div>
@@ -161,7 +161,7 @@ export default function LessonPlayerPage() {
       {/* Header Fortschritt */}
       <div style={{ marginBottom: 'var(--sp-8)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <Link href={`/courses/${data.course.id}`} className="btn btn-secondary" style={{ padding: '6px 12px' }}>
+          <Link href={`/courses/${data.course.id}`} className="btn btn-back" style={{ padding: '8px 16px' }}>
             <ArrowLeft size={16} /> Abbruch
           </Link>
           <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-tertiary)' }}>

@@ -110,6 +110,8 @@ h1 { font-size: var(--fs-h1); } h2 { font-size: var(--fs-h2); } h3 { font-size: 
 .btn-secondary:hover { background: var(--gray-soft); }
 .btn-success { background: var(--th-accent-lime); color: #020617; }
 .btn-success:hover { background: #8FA404; color: #020617; }
+.btn-back { background: transparent; border: 2px solid var(--th-red-brand); color: var(--th-red-brand); font-weight: var(--fw-semibold); font-size: var(--fs-body); padding: var(--sp-2) var(--sp-4); }
+.btn-back:hover { background: var(--th-red-brand); color: #fff; }
 
 .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); transition: transform var(--transition-fast), box-shadow var(--transition-fast); overflow: hidden; }
 .card-hover:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }

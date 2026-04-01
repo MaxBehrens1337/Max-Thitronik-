@@ -72,7 +72,7 @@ export default function AdminCoursesPage() {
   if (editingCourse) {
     return (
       <div className="admin-page">
-        <button className="btn btn-secondary" onClick={() => setEditingCourse(null)} style={{ marginBottom: 'var(--sp-6)' }}>
+        <button className="btn btn-back" onClick={() => setEditingCourse(null)} style={{ marginBottom: 'var(--sp-6)' }}>
           <ArrowLeft size={16} /> Abbrechen
         </button>
         <h1 className="page-title">{editingCourse.id ? 'Kurs bearbeiten' : 'Neuen Kurs anlegen'}</h1>
