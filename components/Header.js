@@ -23,7 +23,6 @@ export function Header({ onMenuClick }) {
   useEffect(() => {
     setMounted(true);
     
-    // Klick ausserhalb schließt Menüs
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setShowProfileMenu(false);
@@ -36,7 +35,6 @@ export function Header({ onMenuClick }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Suchlogik für Kurse
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
       const q = searchQuery.toLowerCase();
@@ -44,7 +42,7 @@ export function Header({ onMenuClick }) {
       const hits = allCourses.filter(c => 
         c.title.toLowerCase().includes(q) || 
         (c.intro && c.intro.toLowerCase().includes(q))
-      ).slice(0, 4); // max 4 results
+      ).slice(0, 4);
       setSearchResults(hits);
     } else {
       setSearchResults([]);
@@ -65,49 +63,43 @@ export function Header({ onMenuClick }) {
   const initials = currentUser ? (currentUser.firstName?.[0] || '') + (currentUser.lastName?.[0] || '') : '';
 
   return (
-    <header className="header" style={{ position: 'sticky', top: 0, zIndex: 100 }}>
+    <header className="header">
       <div className="header-left">
-        <button className="menu-btn" onClick={onMenuClick}>
+        <button 
+          className="menu-btn" 
+          onClick={onMenuClick}
+          aria-label="Menü öffnen"
+        >
           <Menu size={24} />
         </button>
       </div>
 
-      <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-4)' }}>
+      <div className="header-right">
         
-        {/* Search Box with Autocomplete */}
-        <div className="search-box" ref={searchRef} style={{ position: 'relative' }}>
-          <Search size={18} className="search-icon" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
+        {/* Search Box */}
+        <div className="search-box" ref={searchRef}>
+          <Search size={18} className="search-icon" />
           <input 
             type="text" 
             placeholder="Kurs suchen..." 
             className="search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ 
-              padding: '8px 12px 8px 36px', borderRadius: 'var(--radius-full)', 
-              border: '1px solid var(--border-color)', background: 'var(--bg-page)', 
-              color: 'var(--text-primary)', width: searchQuery ? '250px' : '200px',
-              transition: 'width 0.2s', outline: 'none'
-            }} 
+            aria-label="Kurse durchsuchen"
           />
           {searchResults.length > 0 && (
-            <div style={{
-              position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
-              background: 'var(--bg-card)', border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-card-hover)',
-              overflow: 'hidden', zIndex: 200
-            }}>
+            <div className="profile-dropdown" style={{ left: 0, right: 0, top: 'calc(100% + 8px)', width: 'auto' }} role="listbox">
               {searchResults.map(course => (
-                <div 
+                <button 
                   key={course.id} 
                   onClick={() => handleSearchSelect(course.id)}
-                  style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', cursor: 'pointer', transition: 'background 0.1s' }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--gray-soft)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  className="profile-dropdown-item"
+                  role="option"
+                  style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--sp-1)' }}
                 >
-                  <div style={{ fontWeight: '500', fontSize: '14px', color: 'var(--text-primary)' }}>{course.title}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{course.intro}</div>
-                </div>
+                  <span style={{ fontWeight: 'var(--fw-medium)' }}>{course.title}</span>
+                  <span className="activity-detail" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{course.intro}</span>
+                </button>
               ))}
             </div>
           )}
@@ -116,9 +108,9 @@ export function Header({ onMenuClick }) {
         {/* Theme Toggle */}
         {mounted && (
           <button 
+            className="theme-btn"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            title="Theme umschalten"
-            style={{ padding: '8px', color: 'var(--text-secondary)', borderRadius: '50%', border: 'none', background: 'transparent', cursor: 'pointer' }}
+            aria-label={theme === 'dark' ? 'Zum hellen Modus wechseln' : 'Zum dunklen Modus wechseln'}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
@@ -126,39 +118,54 @@ export function Header({ onMenuClick }) {
 
         {/* User Profile */}
         {currentUser && (
-          <div className="user-profile" ref={profileRef} style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '12px', paddingLeft: '16px', borderLeft: '1px solid var(--border-color)', cursor: 'pointer' }} onClick={() => setShowProfileMenu(!showProfileMenu)}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--th-blue-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px' }}>
-              {initials}
-            </div>
-            <div className="user-info" style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '14px', fontWeight: '600' }}>{currentUser.firstName}</span>
+          <div 
+            className="user-profile" 
+            ref={profileRef} 
+            style={{ position: 'relative', cursor: 'pointer' }} 
+            onClick={() => setShowProfileMenu(!showProfileMenu)}
+            role="button"
+            aria-expanded={showProfileMenu}
+            aria-haspopup="menu"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowProfileMenu(!showProfileMenu); }}}
+          >
+            <div className="avatar">{initials}</div>
+            <div className="user-info">
+              <span className="user-name">{currentUser.firstName}</span>
             </div>
 
             {/* Profile Dropdown Menu */}
             {showProfileMenu && (
-              <div style={{
-                position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: '220px',
-                background: 'var(--bg-card)', border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-card-hover)',
-                overflow: 'hidden', zIndex: 200, display: 'flex', flexDirection: 'column'
-              }}>
-                <div style={{ padding: '16px', borderBottom: '1px solid var(--border-color)', background: 'var(--gray-soft)'}}>
-                  <div style={{ fontWeight: '600', fontSize: '14px' }}>{currentUser.firstName} {currentUser.lastName}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{currentUser.email}</div>
+              <div className="profile-dropdown" role="menu" aria-label="Profilmenü">
+                <div className="profile-dropdown-header">
+                  <div className="name">{currentUser.firstName} {currentUser.lastName}</div>
+                  <div className="email">{currentUser.email}</div>
                 </div>
                 
-                <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column' }}>
-                  <button onClick={(e) => { e.stopPropagation(); alert('Einstellungen - Bald verfügbar'); }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', color: 'var(--text-secondary)', width: '100%', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.background = 'var(--gray-soft)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-                    <Settings size={16} /> <span style={{fontSize: '14px'}}>Einstellungen</span>
+                <div className="profile-dropdown-section">
+                  <button 
+                    className="profile-dropdown-item" 
+                    onClick={(e) => { e.stopPropagation(); setShowProfileMenu(false); router.push('/settings'); }}
+                    role="menuitem"
+                  >
+                    <Settings size={16} /> <span>Einstellungen</span>
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); alert('Passwort zurücksetzen - Funktion in Arbeit'); }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', color: 'var(--text-secondary)', width: '100%', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.background = 'var(--gray-soft)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-                    <Key size={16} /> <span style={{fontSize: '14px'}}>Passwort ändern</span>
+                  <button 
+                    className="profile-dropdown-item" 
+                    onClick={(e) => { e.stopPropagation(); setShowProfileMenu(false); router.push('/settings'); }}
+                    role="menuitem"
+                  >
+                    <Key size={16} /> <span>Passwort ändern</span>
                   </button>
                 </div>
 
-                <div style={{ padding: '8px 0', borderTop: '1px solid var(--border-color)' }}>
-                  <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', color: 'var(--color-error)', width: '100%', textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: '500' }} onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-error-bg)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-                    <LogOut size={16} /> <span style={{fontSize: '14px'}}>Abmelden</span>
+                <div className="profile-dropdown-section">
+                  <button 
+                    className="profile-dropdown-item profile-dropdown-item--danger" 
+                    onClick={handleLogout}
+                    role="menuitem"
+                  >
+                    <LogOut size={16} /> <span>Abmelden</span>
                   </button>
                 </div>
               </div>

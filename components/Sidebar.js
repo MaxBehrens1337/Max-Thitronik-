@@ -3,7 +3,7 @@
 import { useAuth } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, BookOpen, User, Settings, Users, BarChart3, HelpCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, BookOpen, User, Settings, Users, BarChart3, HelpCircle, LogOut, ClipboardList } from 'lucide-react';
 import React from 'react';
 
 export function Sidebar({ isOpen, onClose }) {
@@ -48,6 +48,11 @@ export function Sidebar({ isOpen, onClose }) {
             <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
             <NavItem href="/courses" icon={BookOpen} label="Kurse" />
             <NavItem href="/profile" icon={User} label="Mein Fortschritt" />
+          </div>
+
+          <div className="sidebar-section">
+            <div className="sidebar-section-title">Tools</div>
+            <NavItem href="/tools/arbeitskarte" icon={ClipboardList} label="Arbeitskarte" />
           </div>
 
           {(isAdmin || isTrainer) && (

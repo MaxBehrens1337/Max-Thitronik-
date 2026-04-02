@@ -16,10 +16,11 @@ export function AppLayout({ children }) {
 
   return (
     <div className="layout-wrapper">
+      <a href="#main-content" className="skip-link">Zum Inhalt springen</a>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="main-content">
         <Header onMenuClick={() => setSidebarOpen(true)} />
-        <main className="page-content" style={{ padding: 'var(--sp-6) var(--sp-4)', flex: 1, overflowY: 'auto' }}>
+        <main id="main-content" className="page-content" style={{ padding: 'var(--sp-6) var(--sp-4)', flex: 1, overflowY: 'auto' }}>
           <div className="container">
             {children}
           </div>

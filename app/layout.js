@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="de" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem>
           <AuthProvider>
             <AppLayout>
               {children}

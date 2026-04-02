@@ -17,20 +17,18 @@ export default function AdminReportingPage() {
       return;
     }
     
-    // Generiere Report-Daten
     const users = API.getUsers().filter(u => u.role !== 'admin');
     const allCourses = API.getCourses().filter(c => c.status !== 'placeholder' && c.status !== 'incomplete');
     
     const userReports = users.map(user => {
       let completedCount = 0;
-      let totalTimeStr = '0 Minuten'; // Platzhalter für spätere Zeit-Metriken
       
       allCourses.forEach(c => {
         const prog = API.getCourseProgress(user.id, c.id);
         if (prog.percent === 100) completedCount++;
       });
       
-      const lastLogin = 'Heute, 09:42'; // Simulierte Meta-Daten
+      const lastLogin = 'Heute, 09:42';
 
       return {
         ...user,
@@ -48,7 +46,7 @@ export default function AdminReportingPage() {
 
   return (
     <div className="admin-page animate-fade-in-up">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+      <div className="page-header admin-page-header">
         <div>
           <h1 className="page-title">Berichte & Lernerfolge</h1>
           <p className="page-subtitle">Analysieren Sie den Fortschritt Ihrer Teilnehmer auf Modul-Ebene.</p>
@@ -60,27 +58,28 @@ export default function AdminReportingPage() {
       </div>
 
       <div className="card stagger-1" style={{ overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ background: 'var(--gray-soft)', borderBottom: '1px solid var(--border-color)', fontSize: '13px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
+        <div className="admin-table-wrap">
+        <table className="admin-table">
+          <thead>
             <tr>
-              <th style={{ padding: '16px' }}>Teilnehmer</th>
-              <th style={{ padding: '16px' }}>Letzter Status</th>
-              <th style={{ padding: '16px', textAlign: 'center' }}>Absolvierte Module</th>
-              <th style={{ padding: '16px' }}>Gesamtrate</th>
+              <th>Teilnehmer</th>
+              <th>Letzter Status</th>
+              <th className="td-center">Absolvierte Module</th>
+              <th>Gesamtrate</th>
             </tr>
           </thead>
           <tbody>
-            {reports.map((r, idx) => (
-              <tr key={r.id} style={{ borderBottom: idx !== reports.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
-                <td style={{ padding: '16px' }}>
-                  <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>{r.firstName} {r.lastName}</div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>{r.email} ({r.role})</div>
+            {reports.map(r => (
+              <tr key={r.id}>
+                <td>
+                  <div className="td-name" style={{ marginBottom: '4px' }}>{r.firstName} {r.lastName}</div>
+                  <div className="td-secondary">{r.email} ({r.role})</div>
                 </td>
-                <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} color="var(--text-tertiary)"/> {r.lastLogin}</div>
+                <td className="td-secondary">
+                  <div className="cell-inline"><Clock size={14} className="td-muted"/> {r.lastLogin}</div>
                 </td>
-                <td style={{ padding: '16px', textAlign: 'center', fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                <td className="td-center">
+                  <div className="cell-inline" style={{ justifyContent: 'center', fontSize: '18px', fontWeight: 'bold' }}>
                     {r.completedCourses === r.totalActiveCourses && r.totalActiveCourses > 0 ? (
                       <Award size={20} color="var(--color-success)" />
                     ) : (
@@ -89,12 +88,18 @@ export default function AdminReportingPage() {
                     {r.completedCourses} / {r.totalActiveCourses}
                   </div>
                 </td>
-                <td style={{ padding: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '120px', height: '6px', background: 'var(--gray-soft)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: `${r.completionRate}%`, height: '100%', background: r.completionRate === 100 ? 'var(--color-success)' : 'var(--th-blue-secondary)', transition: 'width 1s ease-out' }} />
+                <td>
+                  <div className="progress-inline">
+                    <div className="progress-inline-bar">
+                      <div 
+                        className="progress-inline-fill"
+                        style={{ 
+                          width: `${r.completionRate}%`, 
+                          background: r.completionRate === 100 ? 'var(--color-success)' : 'var(--th-blue-secondary)' 
+                        }} 
+                      />
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: '600', color: r.completionRate === 100 ? 'var(--color-success)' : 'var(--text-secondary)' }}>
+                    <span className={`progress-inline-label ${r.completionRate === 100 ? 'text-success' : 'td-secondary'}`}>
                       {r.completionRate}%
                     </span>
                   </div>
@@ -103,10 +108,11 @@ export default function AdminReportingPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
       
       {reports.length === 0 && (
-        <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-tertiary)', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)' }}>
+        <div className="empty-state card">
           Es sind aktuell keine relevanten Teilnehmerdaten zum Auswerten vorhanden.
         </div>
       )}

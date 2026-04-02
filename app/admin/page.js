@@ -15,7 +15,6 @@ export default function AdminDashboardPage() {
     setMounted(true);
     if (!currentUser) return;
     
-    // Check if user is Admin or Trainer
     if (!Auth.isAdmin() && !Auth.isTrainer()) {
       window.location.href = '/dashboard';
       return;
@@ -44,45 +43,45 @@ export default function AdminDashboardPage() {
   return (
     <div className="admin-dashboard">
       <div className="page-header animate-fade-in-up">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--th-red-brand)', fontWeight: 'bold', fontSize: '14px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div className="admin-badge">
           <Settings size={16} /> Admin Bereich
         </div>
         <h1 className="page-title">Willkommen im Control Center</h1>
         <p className="page-subtitle">Zentrale Verwaltung der THITRONIK Lernplattform.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--sp-4)', marginBottom: 'var(--sp-8)' }} className="animate-fade-in-up stagger-1">
-        <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid var(--th-blue-primary)' }}>
-          <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.courses}</div>
-          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Lernmodule</div>
+      <div className="admin-stats-grid animate-fade-in-up stagger-1">
+        <div className="card admin-stat-card admin-stat-card--blue">
+          <div className="admin-stat-value">{stats.courses}</div>
+          <div className="admin-stat-label">Lernmodule</div>
         </div>
-        <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid var(--color-warning)' }}>
-          <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.questions}</div>
-          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Fragen in der Datenbank</div>
+        <div className="card admin-stat-card admin-stat-card--amber">
+          <div className="admin-stat-value">{stats.questions}</div>
+          <div className="admin-stat-label">Fragen in der Datenbank</div>
         </div>
         {Auth.isAdmin() && (
-          <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid var(--color-info)' }}>
-            <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.users}</div>
-            <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Registrierte Accounts</div>
+          <div className="card admin-stat-card admin-stat-card--teal">
+            <div className="admin-stat-value">{stats.users}</div>
+            <div className="admin-stat-label">Registrierte Accounts</div>
           </div>
         )}
-        <div className="card" style={{ padding: '24px', textAlign: 'center', borderTop: '4px solid var(--color-success)' }}>
-          <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{stats.attempts}</div>
-          <div style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>Absolvierte Quizze</div>
+        <div className="card admin-stat-card admin-stat-card--green">
+          <div className="admin-stat-value">{stats.attempts}</div>
+          <div className="admin-stat-label">Absolvierte Quizze</div>
         </div>
       </div>
 
-      <h2 style={{ marginBottom: 'var(--sp-4)' }} className="animate-fade-in-up stagger-2">Schnellzugriff</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--sp-6)' }} className="animate-fade-in-up stagger-2">
+      <h2 className="animate-fade-in-up stagger-2" style={{ marginBottom: 'var(--sp-4)' }}>Schnellzugriff</h2>
+      <div className="quick-links-grid animate-fade-in-up stagger-2">
         {quickLinks.map((link, idx) => (
-          <Link key={idx} href={link.href} className="card card-hover" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column' }}>
-            <div className="card-body" style={{ flex: 1, display: 'flex', gap: '16px' }}>
-              <div style={{ color: link.color, flexShrink: 0 }}>
+          <Link key={idx} href={link.href} className="card card-hover quick-link-card">
+            <div className="card-body quick-link-body">
+              <div className="quick-link-icon" style={{ color: link.color }}>
                 <link.icon size={32} />
               </div>
               <div>
-                <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>{link.title}</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{link.desc}</p>
+                <h3>{link.title}</h3>
+                <p>{link.desc}</p>
               </div>
             </div>
           </Link>

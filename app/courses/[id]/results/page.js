@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { API } from '@/lib/store';
 import Link from 'next/link';
-import { CheckCircle, XCircle, Award, ArrowLeft, RefreshCw } from 'lucide-react';
+import { XCircle, Award, RefreshCw } from 'lucide-react';
 
 export default function QuizResultsPage() {
   const params = useParams();
@@ -19,21 +19,16 @@ export default function QuizResultsPage() {
     if (!currentUser || !params?.id) return;
     
     const course = API.getCourse(params.id);
-    if (!course) {
-      router.push('/courses');
-      return;
-    }
+    if (!course) { router.push('/courses'); return; }
     
     setData({ course });
 
-    // Lese das letzte Score-Ergebnis aus dem SessionStorage
     if (typeof window !== 'undefined') {
       const stored = sessionStorage.getItem('lastQuizScore');
       if (stored) {
         setResult(JSON.parse(stored));
       } else {
-        // Fallback: Kehre direkt ins Dashboard zurück, wenn hierhin navigiert wurde ohne aktives Quiz
-        router.push(`/profile`);
+        router.push('/profile');
       }
     }
   }, [currentUser, params, router]);
@@ -43,17 +38,17 @@ export default function QuizResultsPage() {
   const passed = result.percent >= 80;
 
   return (
-    <div className="quiz-results-page animate-fade-in-up" style={{ maxWidth: '600px', margin: '60px auto', textAlign: 'center' }}>
+    <div className="results-container animate-fade-in-up" role="main" aria-label="Quiz Ergebnis">
       <div className="card">
         <div className="card-body" style={{ padding: '48px 32px' }}>
           
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+          <div className="results-icon">
             {passed ? (
-              <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '24px', borderRadius: '50%', color: 'var(--color-success)' }}>
+              <div className="results-icon-circle results-icon-circle--pass" aria-hidden="true">
                 <Award size={64} />
               </div>
             ) : (
-              <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '24px', borderRadius: '50%', color: 'var(--color-error)' }}>
+              <div className="results-icon-circle results-icon-circle--fail" aria-hidden="true">
                 <XCircle size={64} />
               </div>
             )}
@@ -69,33 +64,33 @@ export default function QuizResultsPage() {
             }
           </p>
 
-          <div style={{ background: 'var(--bg-page)', padding: '24px', borderRadius: '12px', display: 'flex', justifyContent: 'space-around', marginBottom: '40px' }}>
+          <div className="results-score-grid" role="status" aria-label="Punktestand">
             <div>
-              <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dein Score</div>
-              <div style={{ fontSize: '36px', fontWeight: 'bold', color: passed ? 'var(--color-success)' : 'var(--color-error)' }}>
+              <div className="results-score-label">Dein Score</div>
+              <div className="results-score-value" style={{ color: passed ? 'var(--color-success)' : 'var(--color-error)' }}>
                 {result.percent}%
               </div>
             </div>
-            <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
+            <div className="results-divider"></div>
             <div>
-              <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fragen Richtig</div>
-              <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+              <div className="results-score-label">Fragen Richtig</div>
+              <div className="results-score-value" style={{ color: 'var(--text-primary)' }}>
                 {result.score}/{result.total}
               </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="results-actions">
             {passed ? (
-              <Link href="/profile" className="btn btn-primary" style={{ padding: '16px', fontSize: '18px', borderRadius: '8px' }}>
-                Zurück zu "Mein Fortschritt"
+              <Link href="/profile" className="btn btn-primary">
+                Zurück zu &quot;Mein Fortschritt&quot;
               </Link>
             ) : (
-              <Link href={`/courses/${data.course.id}`} className="btn btn-primary" style={{ padding: '16px', fontSize: '18px', borderRadius: '8px' }}>
+              <Link href={`/courses/${data.course.id}`} className="btn btn-primary">
                 <RefreshCw size={20} /> Modul erneut versuchen
               </Link>
             )}
-            <Link href="/courses" className="btn btn-secondary" style={{ padding: '16px', fontSize: '18px', borderRadius: '8px' }}>
+            <Link href="/courses" className="btn btn-secondary">
               Zur Kursübersicht
             </Link>
           </div>

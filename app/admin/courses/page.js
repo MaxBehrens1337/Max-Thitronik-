@@ -4,7 +4,6 @@ import { useAuth } from '@/lib/auth';
 import { API } from '@/lib/store';
 import { BookOpen, Edit2, Trash2, Plus, ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 export default function AdminCoursesPage() {
   const { Auth, currentUser } = useAuth();
@@ -77,56 +76,54 @@ export default function AdminCoursesPage() {
         </button>
         <h1 className="page-title">{editingCourse.id ? 'Kurs bearbeiten' : 'Neuen Kurs anlegen'}</h1>
         
-        <form onSubmit={handleSave} className="card" style={{ maxWidth: '800px', marginTop: 'var(--sp-6)' }}>
-          <div className="card-body" style={{ display: 'grid', gap: 'var(--sp-4)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
-              <div>
-                <label className="label">Modul Titel</label>
-                <input required type="text" className="input" value={editingCourse.title} onChange={e => setEditingCourse({...editingCourse, title: e.target.value})} />
+        <form onSubmit={handleSave} className="card admin-form">
+          <div className="card-body">
+            <div className="admin-form-grid-2">
+              <div className="form-group">
+                <label>Modul Titel</label>
+                <input required type="text" value={editingCourse.title} onChange={e => setEditingCourse({...editingCourse, title: e.target.value})} />
               </div>
-              <div>
-                <label className="label">Slug (URL-Pfad)</label>
-                <input required type="text" className="input" value={editingCourse.slug} onChange={e => setEditingCourse({...editingCourse, slug: e.target.value})} />
+              <div className="form-group">
+                <label>Slug (URL-Pfad)</label>
+                <input required type="text" value={editingCourse.slug} onChange={e => setEditingCourse({...editingCourse, slug: e.target.value})} />
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--sp-4)' }}>
-              <div>
-                <label className="label">Status</label>
-                <select className="input" value={editingCourse.status} onChange={e => setEditingCourse({...editingCourse, status: e.target.value})}>
+            <div className="admin-form-grid-3">
+              <div className="form-group">
+                <label>Status</label>
+                <select value={editingCourse.status} onChange={e => setEditingCourse({...editingCourse, status: e.target.value})}>
                   <option value="published">Veröffentlicht / Pilot</option>
                   <option value="placeholder">Platzhalter</option>
                   <option value="incomplete">Unvollständig</option>
                 </select>
               </div>
-              <div>
-                <label className="label">Sortierung (Zahl)</label>
-                <input required type="number" className="input" value={editingCourse.sortOrder} onChange={e => setEditingCourse({...editingCourse, sortOrder: parseInt(e.target.value) || 0})} />
+              <div className="form-group">
+                <label>Sortierung (Zahl)</label>
+                <input required type="number" value={editingCourse.sortOrder} onChange={e => setEditingCourse({...editingCourse, sortOrder: parseInt(e.target.value) || 0})} />
               </div>
-              <div>
-                <label className="label">Icon (Emoji)</label>
-                <input type="text" className="input" maxLength={5} value={editingCourse.icon || ''} onChange={e => setEditingCourse({...editingCourse, icon: e.target.value})} />
+              <div className="form-group">
+                <label>Icon (Emoji)</label>
+                <input type="text" maxLength={5} value={editingCourse.icon || ''} onChange={e => setEditingCourse({...editingCourse, icon: e.target.value})} />
               </div>
             </div>
 
-            <div>
-              <label className="label">Einleitung / Kurzbeschreibung</label>
-              <textarea className="input" rows={3} value={editingCourse.intro || ''} onChange={e => setEditingCourse({...editingCourse, intro: e.target.value})} />
+            <div className="form-group">
+              <label>Einleitung / Kurzbeschreibung</label>
+              <textarea rows={3} value={editingCourse.intro || ''} onChange={e => setEditingCourse({...editingCourse, intro: e.target.value})} />
             </div>
 
-            <div>
-              <label className="label">Lernziele (Eins pro Zeile)</label>
-              <textarea className="input" rows={4} value={editingCourse.learningGoalsStr || ''} onChange={e => setEditingCourse({...editingCourse, learningGoalsStr: e.target.value})} placeholder="- Ziel 1&#10;- Ziel 2" />
+            <div className="form-group">
+              <label>Lernziele (Eins pro Zeile)</label>
+              <textarea rows={4} value={editingCourse.learningGoalsStr || ''} onChange={e => setEditingCourse({...editingCourse, learningGoalsStr: e.target.value})} placeholder="- Ziel 1&#10;- Ziel 2" />
             </div>
 
-            <div style={{ display: 'flex', gap: 'var(--sp-4)', marginTop: 'var(--sp-4)', alignItems: 'center' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                <input type="checkbox" checked={editingCourse.hasVideo} onChange={e => setEditingCourse({...editingCourse, hasVideo: e.target.checked})} />
-                Enthält Video-Material
-              </label>
-            </div>
+            <label className="admin-form-checkbox">
+              <input type="checkbox" checked={editingCourse.hasVideo} onChange={e => setEditingCourse({...editingCourse, hasVideo: e.target.checked})} />
+              Enthält Video-Material
+            </label>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-4)', marginTop: 'var(--sp-6)', paddingTop: 'var(--sp-4)', borderTop: '1px solid var(--border-color)' }}>
+            <div className="admin-form-footer">
               <button type="submit" className="btn btn-primary">Speichern</button>
             </div>
           </div>
@@ -137,7 +134,7 @@ export default function AdminCoursesPage() {
 
   return (
     <div className="admin-page">
-      <div className="page-header animate-fade-in-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="page-header admin-page-header animate-fade-in-up">
         <div>
           <h1 className="page-title">Kursverwaltung</h1>
           <p className="page-subtitle">Alle Lernmodule im Überblick.</p>
@@ -146,45 +143,43 @@ export default function AdminCoursesPage() {
       </div>
 
       <div className="card animate-fade-in-up stagger-1" style={{ overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ background: 'var(--gray-soft)', borderBottom: '1px solid var(--border-color)', fontSize: '13px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
+        <div className="admin-table-wrap">
+        <table className="admin-table">
+          <thead>
             <tr>
-              <th style={{ padding: '16px' }}>Order</th>
-              <th style={{ padding: '16px' }}>Modul</th>
-              <th style={{ padding: '16px' }}>Status</th>
-              <th style={{ padding: '16px' }}>Inhalt</th>
-              <th style={{ padding: '16px', textAlign: 'right' }}>Aktion</th>
+              <th>Order</th>
+              <th>Modul</th>
+              <th>Status</th>
+              <th>Inhalt</th>
+              <th>Aktion</th>
             </tr>
           </thead>
           <tbody>
             {courses.map(c => (
-              <tr key={c.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s', ':hover': { background: 'var(--gray-soft)' } }}>
-                <td style={{ padding: '16px', color: 'var(--text-tertiary)' }}>{c.sortOrder}</td>
-                <td style={{ padding: '16px', fontWeight: '500' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <tr key={c.id}>
+                <td className="td-muted">{c.sortOrder}</td>
+                <td className="td-name">
+                  <div className="cell-inline">
                     <span style={{ fontSize: '20px' }}>{c.icon}</span> {c.title}
                   </div>
                 </td>
-                <td style={{ padding: '16px' }}>
-                  <span style={{ 
-                    padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500',
-                    background: c.status === 'published' ? 'var(--color-success-bg)' : c.status === 'placeholder' ? 'var(--gray-soft)' : 'var(--color-warning-bg)',
-                    color: c.status === 'published' ? 'var(--color-success)' : c.status === 'placeholder' ? 'var(--text-tertiary)' : 'var(--color-warning)'
-                  }}>
+                <td>
+                  <span className={`badge ${c.status === 'published' ? 'badge--success' : c.status === 'placeholder' ? 'badge--neutral' : 'badge--warning'}`}>
                     {c.status.toUpperCase()}
                   </span>
                 </td>
-                <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                <td className="td-secondary">
                   {c.questionCount} Qs
                 </td>
-                <td style={{ padding: '16px', textAlign: 'right' }}>
-                  <button onClick={() => handleEdit(c)} className="btn" style={{ padding: '6px', color: 'var(--th-blue-secondary)' }} title="Bearbeiten"><Edit2 size={18}/></button>
-                  <button onClick={() => handleDelete(c.id)} className="btn" style={{ padding: '6px', color: 'var(--color-error)' }} title="Löschen"><Trash2 size={18}/></button>
+                <td>
+                  <button onClick={() => handleEdit(c)} className="icon-btn icon-btn--edit" title="Bearbeiten"><Edit2 size={18}/></button>
+                  <button onClick={() => handleDelete(c.id)} className="icon-btn icon-btn--delete" title="Löschen"><Trash2 size={18}/></button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

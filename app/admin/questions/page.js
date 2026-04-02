@@ -20,7 +20,6 @@ export default function AdminQuestionsPage() {
       return;
     }
     
-    // Lade alle verfügbaren aktiven Kurse für den Filter
     const activeCourses = API.getCourses().filter(c => c.status !== 'placeholder');
     setCourses(activeCourses);
     if (activeCourses.length > 0) {
@@ -28,7 +27,6 @@ export default function AdminQuestionsPage() {
     }
   }, [currentUser, Auth]);
 
-  // Wenn Course wechselt, lade die Fragen der ersten Lesson dieses Kurses
   useEffect(() => {
     if (selectedCourseId) {
       loadQuestions(selectedCourseId);
@@ -67,7 +65,7 @@ export default function AdminQuestionsPage() {
   };
 
   const handleEdit = (q) => {
-    setEditingQuestion(JSON.parse(JSON.stringify(q))); // Deep copy um State-Mutations direkt zu vermeiden
+    setEditingQuestion(JSON.parse(JSON.stringify(q)));
   };
 
   const handleDelete = (id) => {
@@ -94,10 +92,8 @@ export default function AdminQuestionsPage() {
 
     API.saveQuestion(editingQuestion);
     
-    // Update question count in Course
     const c = API.getCourse(editingQuestion.courseId);
     if (c) {
-      // Re-evaluate total
       const lsns = API.getLessons(editingQuestion.courseId);
       const allQs = lsns.reduce((acc, l) => acc + API.getQuestions(l.id).length, 0);
       c.questionCount = allQs;
@@ -119,34 +115,31 @@ export default function AdminQuestionsPage() {
         <h1 className="page-title">Frage Editor</h1>
         <p className="page-subtitle">Modul: {currentCourse?.title}</p>
         
-        <form onSubmit={handleSave} className="card" style={{ maxWidth: '900px', marginTop: 'var(--sp-6)' }}>
-          <div className="card-body" style={{ display: 'grid', gap: 'var(--sp-6)' }}>
+        <form onSubmit={handleSave} className="card admin-form" style={{ maxWidth: '900px' }}>
+          <div className="card-body" style={{ gap: 'var(--sp-6)' }}>
             
-            {/* Fragestellung */}
-            <div>
-              <label className="label">Die Frage (Fragestellung)</label>
+            <div className="form-group">
+              <label>Die Frage (Fragestellung)</label>
               <textarea 
                 required 
                 rows={3}
-                className="input" 
                 style={{ fontSize: '18px', fontWeight: '500' }}
                 value={editingQuestion.question} 
                 onChange={e => updateEditingQuestion({ question: e.target.value })} 
               />
             </div>
 
-            {/* Antwort-Optionen */}
-            <div style={{ background: 'var(--gray-soft)', padding: 'var(--sp-4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div className="answers-area">
+              <div className="answers-area-header">
                 <label className="label" style={{ margin: 0 }}>Antwortmöglichkeiten & Korrektheit</label>
-                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>Setze den Haken bei den korrekten Antworten.</div>
+                <div className="answers-area-hint">Setze den Haken bei den korrekten Antworten.</div>
               </div>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div className="answer-list">
                 {editingQuestion.answers.map((answer, idx) => {
                   const isCorrect = editingQuestion.correctAnswers.includes(answer);
                   return (
-                    <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div key={idx} className="answer-row">
                       <input 
                         type="checkbox" 
                         checked={isCorrect}
@@ -163,15 +156,21 @@ export default function AdminQuestionsPage() {
                       />
                       <input 
                         type="text" 
-                        className="input" 
-                        style={{ flex: 1, borderColor: isCorrect ? 'var(--color-success)' : 'var(--border-color)', outlineColor: isCorrect ? 'var(--color-success)' : 'inherit' }}
+                        className="form-group"
+                        style={{ 
+                          flex: 1, 
+                          padding: '14px',
+                          borderRadius: 'var(--radius-md)',
+                          border: `1px solid ${isCorrect ? 'var(--color-success)' : 'var(--border-color)'}`,
+                          background: 'var(--bg-page)',
+                          color: 'var(--text-primary)'
+                        }}
                         value={answer}
                         onChange={(e) => {
                           const newAnswers = [...editingQuestion.answers];
                           const oldVal = newAnswers[idx];
                           newAnswers[idx] = e.target.value;
                           
-                          // Wenn oldVal als correct markiert war, den correctAnswers Array ebenfalls updaten
                           let newCorrect = [...editingQuestion.correctAnswers];
                           if (newCorrect.includes(oldVal)) {
                             newCorrect[newCorrect.indexOf(oldVal)] = e.target.value;
@@ -180,11 +179,11 @@ export default function AdminQuestionsPage() {
                           updateEditingQuestion({ answers: newAnswers, correctAnswers: newCorrect });
                         }}
                       />
-                      <button type="button" onClick={() => {
+                      <button type="button" className="icon-btn icon-btn--delete" onClick={() => {
                         const newAnswers = editingQuestion.answers.filter((_, i) => i !== idx);
                         const newCorrect = editingQuestion.correctAnswers.filter(a => a !== answer);
                         updateEditingQuestion({ answers: newAnswers, correctAnswers: newCorrect });
-                      }} style={{ padding: '8px', color: 'var(--color-error)', cursor: 'pointer' }}>
+                      }}>
                         <Trash2 size={20} />
                       </button>
                     </div>
@@ -199,33 +198,31 @@ export default function AdminQuestionsPage() {
               </button>
             </div>
 
-            {/* Erklärung */}
-            <div>
-              <label className="label">Erklärungstext (Wird nach Auflösung angezeigt)</label>
+            <div className="form-group">
+              <label>Erklärungstext (Wird nach Auflösung angezeigt)</label>
               <textarea 
                 rows={4}
-                className="input" 
                 value={editingQuestion.explanation || ''} 
                 onChange={e => updateEditingQuestion({ explanation: e.target.value })}
                 placeholder="Warum ist diese Antwort richtig?"
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: '16px'}}>
-              <div>
-                <label className="label">Fragetyp</label>
-                <select className="input" value={editingQuestion.type} onChange={e => updateEditingQuestion({ type: e.target.value })}>
+            <div className="admin-form-grid-2">
+              <div className="form-group">
+                <label>Fragetyp</label>
+                <select value={editingQuestion.type} onChange={e => updateEditingQuestion({ type: e.target.value })}>
                   <option value="single">Single Choice</option>
                   <option value="multiple">Multiple Choice</option>
                 </select>
               </div>
-              <div>
-                <label className="label">Reihenfolge (Sortierung)</label>
-                <input type="number" className="input" value={editingQuestion.sortOrder || 0} onChange={e => updateEditingQuestion({ sortOrder: parseInt(e.target.value) || 0 })} />
+              <div className="form-group">
+                <label>Reihenfolge (Sortierung)</label>
+                <input type="number" value={editingQuestion.sortOrder || 0} onChange={e => updateEditingQuestion({ sortOrder: parseInt(e.target.value) || 0 })} />
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 'var(--sp-4)', borderTop: '1px solid var(--border-color)', marginTop: 'var(--sp-4)' }}>
+            <div className="admin-form-footer" style={{ marginTop: 'var(--sp-4)' }}>
               <button type="submit" className="btn btn-primary"><Save size={18} /> Frage speichern</button>
             </div>
             
@@ -237,52 +234,50 @@ export default function AdminQuestionsPage() {
 
   return (
     <div className="admin-page animate-fade-in-up">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+      <div className="page-header admin-page-header">
         <div>
           <h1 className="page-title">Fragen-Datenbank</h1>
           <p className="page-subtitle">Verwalten Sie hier alle Quiz-Inhalte für Ihre Module.</p>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-card)', padding: '12px 20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
-          <Filter size={18} color="var(--text-tertiary)" />
+        <div className="filter-bar">
+          <Filter size={18} className="td-muted" />
           <select 
-            className="input" 
-            style={{ border: 'none', background: 'transparent', padding: 0, fontWeight: '600', width: 'auto', minWidth: '200px', color: 'var(--th-accent-lime)' }}
             value={selectedCourseId} 
             onChange={e => setSelectedCourseId(e.target.value)}
           >
-            {courses.map(c => <option key={c.id} value={c.id} style={{ background: '#fff', color: '#000' }}>{c.icon} {c.title}</option>)}
+            {courses.map(c => <option key={c.id} value={c.id}>{c.icon} {c.title}</option>)}
           </select>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+      <div className="action-bar">
         <button className="btn btn-success" onClick={handleCreate} disabled={!selectedCourseId}><Plus size={18} /> Neue Frage anlegen</button>
       </div>
 
       <div className="card stagger-1" style={{ overflow: 'hidden' }}>
         {questions.length === 0 ? (
-          <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-tertiary)' }}>
-            <HelpCircle size={48} style={{ opacity: 0.2, margin: '0 auto 16px' }} />
+          <div className="empty-state">
+            <HelpCircle size={48} style={{ opacity: 0.2, marginBottom: '16px' }} />
             <p>Keine Fragen in diesem Modul gefunden.</p>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div>
             {questions.map((q, idx) => (
-              <div key={q.id} style={{ padding: '24px', borderBottom: idx !== questions.length - 1 ? '1px solid var(--border-color)' : 'none', display: 'flex', gap: '24px' }}>
+              <div key={q.id} className="question-list-item">
                 
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-tertiary)' }}>Q{idx+1}</div>
-                  <div style={{ fontSize: '12px', background: 'var(--gray-soft)', padding: '2px 8px', borderRadius: '12px', color: 'var(--text-secondary)' }}>{q.type}</div>
+                <div className="question-meta">
+                  <div className="question-number">Q{idx+1}</div>
+                  <div className="question-type-badge">{q.type}</div>
                 </div>
                 
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: '16px', marginBottom: '12px' }}>{q.question}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div className="question-body">
+                  <h3>{q.question}</h3>
+                  <div className="question-answers">
                     {q.answers.map((a, aidx) => {
                       const isCorrect = q.correctAnswers.includes(a);
                       return (
-                        <div key={aidx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: isCorrect ? 'var(--color-success)' : 'var(--text-secondary)' }}>
+                        <div key={aidx} className={`question-answer ${isCorrect ? 'question-answer--correct' : 'question-answer--incorrect'}`}>
                           {isCorrect ? '✅' : '⚪'} {a}
                         </div>
                       )
@@ -290,9 +285,9 @@ export default function AdminQuestionsPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="question-actions">
                   <button onClick={() => handleEdit(q)} className="btn btn-secondary" style={{ padding: '8px 12px' }}><Edit2 size={16}/> Bearbeiten</button>
-                  <button onClick={() => handleDelete(q.id)} className="btn btn-secondary" style={{ padding: '8px 12px', color: 'var(--color-error)' }}><Trash2 size={16}/> Löschen</button>
+                  <button onClick={() => handleDelete(q.id)} className="btn btn-secondary icon-btn--delete" style={{ padding: '8px 12px' }}><Trash2 size={16}/> Löschen</button>
                 </div>
 
               </div>
