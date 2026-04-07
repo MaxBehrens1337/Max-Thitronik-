@@ -1,8 +1,8 @@
-<![CDATA[<p align="center">
-  <img src="public/logo.png" alt="THITRONIK Logo" width="300" />
+<p align="center">
+  <img src="public/Bilder/Thitronik_vektor.webp" alt="THITRONIK Logo" width="300" />
 </p>
 
-<h1 align="center">THITRONIK Lernplattform</h1>
+<h1 align="center">THITRONIK Campus Online</h1>
 
 <p align="center">
   <strong>Interne Schulungs- und Zertifizierungsplattform für THITRONIK Monteure, Partner & Mitarbeiter</strong>
@@ -14,6 +14,7 @@
   <img src="https://img.shields.io/badge/Node.js-18+-339933?logo=node.js" alt="Node.js" />
   <img src="https://img.shields.io/badge/Lizenz-Proprietär-red" alt="Lizenz" />
   <img src="https://img.shields.io/badge/Sprache-Deutsch-gold" alt="Sprache" />
+  <img src="https://img.shields.io/badge/Version-V14-blue" alt="Version" />
 </p>
 
 ---
@@ -38,7 +39,7 @@
 
 ## 🎯 Über das Projekt
 
-Die **THITRONIK Lernplattform** (auch "THITRONIK UNI") ist eine webbasierte Schulungsanwendung für die interne Weiterbildung von Monteuren, Händlern und Partnern der Firma [THITRONIK](https://www.thitronik.de/) – einem führenden Hersteller von Alarmanlagen und Sicherheitssystemen für Wohnmobile und Nutzfahrzeuge.
+Die **THITRONIK Campus Online** (auch "THITRONIK UNI") ist eine webbasierte Schulungsanwendung für die interne Weiterbildung von Monteuren, Händlern und Partnern der Firma [THITRONIK](https://www.thitronik.de/) – einem führenden Hersteller von Alarmanlagen und Sicherheitssystemen für Wohnmobile und Nutzfahrzeuge.
 
 ### Zweck
 
@@ -46,6 +47,8 @@ Die Plattform ermöglicht es Nutzern:
 - **Schulungsvideos** anzusehen (zu THITRONIK Produkten und Einbautechniken)
 - **Bildbasierte Quiz-Fragen** zu beantworten (Single- & Multiple-Choice mit Bildern als Antworten)
 - **Lernfortschritte** zu verfolgen und Zertifizierungen abzulegen
+- Im **Forum** Fragen zu stellen und Wissen auszutauschen
+- Im **Wiki** Produktdokumentationen nachzuschlagen
 - Admins können **Kurse und Nutzer verwalten** sowie **Reporting-Statistiken** einsehen
 
 ### Aktueller Status
@@ -59,15 +62,20 @@ Die Plattform ermöglicht es Nutzern:
 | Feature | Beschreibung |
 |---------|-------------|
 | 🔐 **Authentifizierung** | Rollen-basiertes Login (Admin, Trainer, Lernender) mit LocalStorage-Session |
-| 📊 **Dashboard** | Personalisierte Übersicht mit Lernfortschritt, KPIs und letzten Aktivitäten |
+| 📊 **Dashboard** | Personalisiertes Dashboard mit Daily Challenge, Lernfortschritt, KPIs und Gamification |
 | 📚 **Kursübersicht** | Alle verfügbaren Module mit Einschreibungsfunktion |
 | 🎬 **Video-Lektionen** | Schulungsvideos pro Modul (Dateien nicht im Repo enthalten) |
 | ❓ **Quiz Engine** | Single- und Multiple-Choice Fragen mit Bildern als Antwortoptionen |
 | 📈 **Fortschrittsverfolgung** | Pro Kurs und pro Lektion mit Prozent-Berechnung |
 | ⚙️ **Admin Dashboard** | Verwaltung von Kursen, Fragen, Nutzern und Reporting |
-| 👤 **Profil & Einstellungen** | Profiländerung, Passwort-Änderung, Dark/Light Theme |
+| 💬 **Forum** | Diskussionsforum mit Kategorien, Themen und Antworten |
+| 📖 **Wiki** | Produktdokumentation und Wissensdatenbank |
+| 🏢 **THI-Bereich** | THITRONIK Unternehmensinfos und Ressourcen |
+| 👤 **Profil & Einstellungen** | Profilfoto, Social Links, Passwort-Änderung, Theme-Auswahl |
 | 🌙 **Dark Mode** | Vollständiger Dark Mode mit `next-themes` als Standard |
 | 📱 **Responsive Design** | Mobile-optimiertes Layout mit Sidebar-Navigation |
+| 📄 **Legal Pages** | Impressum, Datenschutz, Support-Seiten |
+| 🎯 **Daily Challenge** | Tägliche Quiz-Herausforderung auf dem Dashboard |
 
 ---
 
@@ -120,6 +128,7 @@ Die Plattform enthält **11 aktive Schulungsmodule** (Seed Data v14):
 │  ┌──────▼─────────────────────────────────────────────────┐   │
 │  │                    App Router (Pages)                    │   │
 │  │  /login  /dashboard  /courses  /profile  /admin         │   │
+│  │  /forum  /wiki  /thi  /impressum  /datenschutz          │   │
 │  └──────┬──────────────────────────────────────────────────┘   │
 │         │                                                      │
 │  ┌──────▼──────┐  ┌──────────────┐  ┌──────────────────────┐  │
@@ -142,51 +151,55 @@ Die Plattform enthält **11 aktive Schulungsmodule** (Seed Data v14):
 ## 📂 Projektstruktur
 
 ```
-thitronik-lernplattform/
+thitronik-campus-online/
+├── .agents/                      # Agent-Konfiguration
+│   └── skills/                   # Agent Skills (UI/UX Review etc.)
+│       └── ui-ux-review/
 ├── app/                          # Next.js App Router (Pages)
 │   ├── layout.js                 # Root Layout (AuthProvider, ThemeProvider, AppLayout)
 │   ├── page.js                   # Root → Redirect zu /login oder /dashboard
 │   ├── globals.css               # Globale Styles + Design Tokens (Light/Dark)
-│   ├── login/
-│   │   └── page.js               # Login-Seite mit Demo-Credentials
-│   ├── dashboard/
-│   │   └── page.js               # User-Dashboard (Fortschritte, KPIs, Aktivitäten)
-│   ├── courses/
+│   ├── login/page.js             # Login-Seite mit Demo-Credentials
+│   ├── dashboard/page.js         # Dashboard (Fortschritte, KPIs, Daily Challenge)
+│   ├── courses/                  # Kursbereich
 │   │   ├── page.js               # Kursübersicht (alle Module)
-│   │   └── [id]/
-│   │       ├── page.js           # Einzelne Kursseite
-│   │       └── lesson/
-│   │           └── [lessonId]/
-│   │               └── page.js   # Lektions-Player (Video + Quiz Engine)
-│   ├── profile/
-│   │   └── page.js               # Profil & Lernfortschritt
-│   ├── settings/
-│   │   └── page.js               # Einstellungen (Profil, Passwort, Theme)
-│   └── admin/
+│   │   └── [id]/                 # Einzelne Kursseite
+│   │       └── lesson/[lessonId]/page.js  # Lektions-Player (Video + Quiz)
+│   ├── forum/                    # Forum-System
+│   │   ├── page.js               # Forum-Übersicht (Kategorien)
+│   │   ├── new/page.js           # Neues Thema erstellen
+│   │   └── [categoryId]/         # Kategorie-Ansicht
+│   │       └── [topicId]/page.js # Themen-Detail mit Antworten
+│   ├── wiki/page.js              # Wiki / Wissensdatenbank
+│   ├── thi/page.js               # THITRONIK Unternehmensbereich
+│   ├── profile/page.js           # Profil & Lernfortschritt
+│   ├── settings/page.js          # Einstellungen (Profil, Passwort, Theme)
+│   ├── datenschutz/page.js       # Datenschutzerklärung
+│   ├── impressum/page.js         # Impressum
+│   ├── support/page.js           # Support & Kontakt
+│   └── admin/                    # Admin-Bereich
 │       ├── page.js               # Admin Dashboard (KPIs + Schnellzugriff)
-│       ├── courses/
-│       │   └── page.js           # Kursverwaltung
-│       ├── questions/
-│       │   └── page.js           # Fragenverwaltung
-│       ├── users/
-│       │   └── page.js           # Benutzerverwaltung (nur Admin)
-│       └── reporting/
-│           └── page.js           # Berichte & Analysen
+│       ├── courses/page.js       # Kursverwaltung
+│       ├── questions/page.js     # Fragenverwaltung mit Sortierung
+│       ├── users/page.js         # Benutzerverwaltung (nur Admin)
+│       └── reporting/page.js     # Berichte & Analysen
 │
 ├── components/                   # Wiederverwendbare React-Komponenten
 │   ├── AppLayout.js              # Layout-Wrapper (Sidebar + Header + Content)
 │   ├── Header.js                 # Top-Navigation mit Suche, Theme-Toggle, Profil-Dropdown
-│   ├── Sidebar.js                # Seitenleiste mit Navigation (Responsive)
+│   ├── Sidebar.js                # Seitenleiste mit rollenbasierter Navigation
 │   ├── ThemeProvider.js          # next-themes Wrapper
 │   └── ui.js                     # UI-Primitives (ProgressBar, StatusBadge)
 │
 ├── lib/                          # Business-Logik & Datenschicht
 │   ├── auth.js                   # AuthContext, Auth-Objekt, Login/Logout, Rollen
 │   ├── store.js                  # Store (LocalStorage-Wrapper) + API-Abstraktionsschicht
-│   └── seed.js                   # Seed-Daten: Benutzer, Kurse, Lektionen, Fragen (V14)
+│   ├── seed.js                   # Seed-Daten: Benutzer, Kurse, Lektionen, Fragen (V14)
+│   ├── roles.js                  # Rollen-basierte Berechtigungen & Navigation
+│   └── forum.js                  # Forum-Datenlogik (Kategorien, Themen, Antworten)
 │
-├── public/                       # Statische Assets
-│   ├── logo.png                  # THITRONIK Logo
+├── public/                       # Statische Assets (Quiz-Bilder, Logos)
+│   ├── Bilder/                   # Kurs-Thumbnails und Markenbilder
 │   ├── Allgemeinfragen/          # Quiz-Bilder Modul "Allgemeine Fragen"
 │   ├── Can-Bus/                  # Quiz-Bilder + Video* Modul "CAN-Bus"
 │   ├── Fahrzeugübergabe/         # Quiz-Bilder + Video* Modul "Fahrzeugübergabe"
@@ -197,15 +210,18 @@ thitronik-lernplattform/
 │   ├── Konfigurator/             # Quiz-Bilder + Video* Modul "Konfigurator"
 │   ├── Magnet Montageadapter/    # Quiz-Bilder + Video* Modul "Montageadapter"
 │   ├── pro-finder/               # Quiz-Bilder + Video* Modul "Pro-finder"
+│   ├── Vs 30/                    # Quiz-Bilder Modul "Vs 30"
 │   └── WiPro/                    # Quiz-Bilder + Video* Modul "WiPro"
 │
+├── AGENTS.md                     # Kontext-Datei für KI-Agenten
+├── CLAUDE.md                     # Claude-Agenten-Verweis auf AGENTS.md
+├── CONTRIBUTING.md               # Beitrags-Richtlinien
+├── README.md                     # Diese Datei
 ├── package.json                  # Dependencies & Scripts
 ├── next.config.mjs               # Next.js Konfiguration
 ├── jsconfig.json                 # Path Aliases (@/ → Root)
 ├── eslint.config.mjs             # ESLint Konfiguration
-├── AGENTS.md                     # Kontext-Datei für KI-Agenten
-├── CONTRIBUTING.md               # Beitrags-Richtlinien
-└── .gitignore                    # Git-Ignore (inkl. Videodateien)
+└── .gitignore                    # Git-Ignore (Videos ignoriert, Bilder erlaubt)
 ```
 
 > **\*** Video-Dateien (`.mp4`, `.m4v`) sind in `.gitignore` ausgeschlossen und nicht im Repository.
@@ -350,6 +366,18 @@ Die Quiz-Fragen verwenden **Bilder als Antwortoptionen**, nicht Text. Die Bild-D
 
 ---
 
+## 🤖 Für KI-Agenten
+
+Dieses Projekt ist für die Zusammenarbeit mit KI-Code-Agenten vorbereitet:
+
+- **`AGENTS.md`** – Vollständiger Projekt-Kontext, Architektur-Regeln, Datei-Referenz und häufige Fallstricke
+- **`CLAUDE.md`** – Verweis auf AGENTS.md für Claude-basierte Agenten
+- **`.agents/skills/`** – Spezialisierte Skills (z.B. UI/UX Review)
+
+Agenten sollten `AGENTS.md` **vor jeder Code-Änderung** lesen.
+
+---
+
 ## 🗺️ Roadmap
 
 ### Phase 2 – Backend & Persistenz
@@ -382,4 +410,3 @@ Dieses Projekt ist **proprietäre Software** der Firma THITRONIK GmbH. Alle Rech
 <p align="center">
   <sub>Entwickelt für THITRONIK GmbH · 2026</sub>
 </p>
-]]>

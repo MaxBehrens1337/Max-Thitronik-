@@ -1,4 +1,4 @@
-<![CDATA[<!-- BEGIN:nextjs-agent-rules -->
+<!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
@@ -6,13 +6,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ---
 
-# THITRONIK Lernplattform – Agent Context
+# THITRONIK Campus Online – Agent Context
 
 > Dieses Dokument liefert strukturierten Kontext für KI-Agenten, die mit dieser Codebasis arbeiten. Lies dieses Dokument vollständig, bevor du Code schreibst oder Änderungen vorschlägst.
 
 ## Projekt-Übersicht
 
-**Name:** THITRONIK Lernplattform (THITRONIK UNI)  
+**Name:** THITRONIK Campus Online (THITRONIK UNI)  
 **Typ:** Client-seitige SPA (Single Page Application)  
 **Framework:** Next.js 16.2.1 (App Router, `"use client"` auf allen Seiten)  
 **Sprache:** JavaScript (kein TypeScript)  
@@ -56,7 +56,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ### 6. Komponenten-Struktur
 - `AppLayout.js` — Prüft ob Login-Seite → rendert ohne Layout, sonst mit Sidebar + Header.
 - `Header.js` — Top-Bar mit Suche, Theme-Toggle, Profil-Dropdown (mit Logout und Einstellungen).
-- `Sidebar.js` — Navigation (responsive, mobile mit Overlay).
+- `Sidebar.js` — Rollenbasierte Navigation (responsive, mobile mit Overlay).
 - `ui.js` — Wiederverwendbare Primitives (`ProgressBar`, `StatusBadge`).
 
 ### 7. Quiz Engine (app/courses/[id]/lesson/[lessonId]/page.js)
@@ -66,18 +66,35 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Bestanden ab **80% Korrektheit**.
 - Ergebnisse werden als `quizAttempt` in `th_quizAttempts` gespeichert.
 
+### 8. Rollen-System (lib/roles.js)
+- Definiert Berechtigungen und Navigations-Items pro Rolle.
+- `admin`: Vollzugriff auf alle Bereiche inkl. Admin-Panel.
+- `trainer`: Kursverwaltung, Fragen, Reporting (kein User-Management).
+- `learner`: Kurse, Quiz, eigenes Profil.
+
+### 9. Forum-System (lib/forum.js + app/forum/)
+- Forum mit Kategorien, Themen und Antworten.
+- Daten werden ebenfalls in LocalStorage über den Store gespeichert.
+- Unterstützt Erstellen, Antworten und Kategorisierung.
+
 ## Datei-Referenz (Quick-Lookup)
 
 | Wenn du ändern willst... | Bearbeite... |
 |--------------------------|-------------|
 | Neue Kurse/Fragen hinzufügen | `lib/seed.js` (Version-Key hochsetzen!) |
 | Login-Logik, Rollen | `lib/auth.js` |
+| Rollen-Berechtigungen | `lib/roles.js` |
 | Daten CRUD-Operationen | `lib/store.js` (API-Objekt) |
+| Forum-Logik | `lib/forum.js` |
 | Farben, Abstände, Schatten | `app/globals.css` (Design-Tokens) |
 | Navigation / Menü-Einträge | `components/Sidebar.js` |
 | Header (Suche, Profil, Theme) | `components/Header.js` |
 | Layout-Logik | `components/AppLayout.js` |
 | UI-Primitives (Badges, Bars) | `components/ui.js` |
+| Forum-Seiten | `app/forum/` |
+| Wiki-Seite | `app/wiki/page.js` |
+| THI-Bereich | `app/thi/page.js` |
+| Legal Pages | `app/impressum/`, `app/datenschutz/`, `app/support/` |
 
 ## Häufige Fallstricke
 
@@ -93,4 +110,3 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Für Production:** `npm run build && npm start`
 - **Video-Hosting:** Videos müssen separat bereitgestellt werden (CDN oder lokaler Ordner)
 - **Kein `.env` benötigt** — alle Konfiguration ist hartcodiert (MVP)
-]]>
