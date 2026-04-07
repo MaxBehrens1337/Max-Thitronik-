@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/lib/auth';
 import { API } from '@/lib/store';
-import { HelpCircle, Edit2, Trash2, Plus, ArrowLeft, Save, Filter } from 'lucide-react';
+import { HelpCircle, Edit2, Trash2, Plus, ArrowLeft, Save, Filter, ChevronUp, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function AdminQuestionsPage() {
@@ -36,10 +36,34 @@ export default function AdminQuestionsPage() {
   const loadQuestions = (courseId) => {
     const lessons = API.getLessons(courseId);
     if (lessons.length > 0) {
-      setQuestions(API.getQuestions(lessons[0].id));
+      const qs = API.getQuestions(lessons[0].id);
+      qs.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+      setQuestions(qs);
     } else {
       setQuestions([]);
     }
+  };
+
+  const handleMoveUp = (idx) => {
+    if (idx === 0) return;
+    const qs = [...questions];
+    const tempOrder = qs[idx].sortOrder;
+    qs[idx].sortOrder = qs[idx - 1].sortOrder;
+    qs[idx - 1].sortOrder = tempOrder;
+    API.saveQuestion(qs[idx]);
+    API.saveQuestion(qs[idx - 1]);
+    loadQuestions(selectedCourseId);
+  };
+
+  const handleMoveDown = (idx) => {
+    if (idx >= questions.length - 1) return;
+    const qs = [...questions];
+    const tempOrder = qs[idx].sortOrder;
+    qs[idx].sortOrder = qs[idx + 1].sortOrder;
+    qs[idx + 1].sortOrder = tempOrder;
+    API.saveQuestion(qs[idx]);
+    API.saveQuestion(qs[idx + 1]);
+    loadQuestions(selectedCourseId);
   };
 
   const currentCourse = courses.find(c => c.id === selectedCourseId);
@@ -266,8 +290,29 @@ export default function AdminQuestionsPage() {
             {questions.map((q, idx) => (
               <div key={q.id} className="question-list-item">
                 
+                <div className="question-reorder">
+                  <button 
+                    type="button" 
+                    className="btn-reorder" 
+                    onClick={() => handleMoveUp(idx)} 
+                    disabled={idx === 0}
+                    title="Nach oben verschieben"
+                  >
+                    <ChevronUp size={18} />
+                  </button>
+                  <span className="question-position">{idx + 1}</span>
+                  <button 
+                    type="button" 
+                    className="btn-reorder" 
+                    onClick={() => handleMoveDown(idx)} 
+                    disabled={idx === questions.length - 1}
+                    title="Nach unten verschieben"
+                  >
+                    <ChevronDown size={18} />
+                  </button>
+                </div>
+
                 <div className="question-meta">
-                  <div className="question-number">Q{idx+1}</div>
                   <div className="question-type-badge">{q.type}</div>
                 </div>
                 

@@ -97,8 +97,15 @@ export default function ProfilePage() {
           ) : (
             data.courses.map((course, idx) => (
               <div key={course.id} className={`course-list-item ${idx !== data.courses.length - 1 ? 'course-list-item--bordered' : ''}`}>
-                <div className="course-card-icon" style={{ fontSize: '32px' }}>
-                  {course.icon || '📚'}
+                {/* Thumbnail instead of emoji */}
+                <div className="course-list-thumb">
+                  {course.image ? (
+                    <img src={course.image} alt={course.title} loading="lazy" />
+                  ) : (
+                    <div className="course-list-thumb-fallback">
+                      <BookOpen size={24} style={{ color: 'var(--th-blue-secondary)' }} />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="course-list-info">
@@ -137,3 +144,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

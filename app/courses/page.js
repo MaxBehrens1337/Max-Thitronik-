@@ -39,22 +39,35 @@ export default function CoursesPage() {
               role="listitem"
               aria-label={`Kurs: ${course.title}`}
             >
-              <div className="card-body">
-                <div className="course-card-header">
-                  <div className="course-card-icon">
-                    {course.icon}
+              {/* Hero Image */}
+              <div className="course-card-hero">
+                {course.image ? (
+                  <img 
+                    src={course.image} 
+                    alt={course.title}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="course-card-hero-fallback">
+                    <BookOpen size={48} style={{ color: 'var(--th-blue-secondary)', opacity: 0.6 }} />
                   </div>
-                  
-                  {isPilot && (
-                    <span className="badge badge--success">PILOT</span>
-                  )}
-                  {isPlaceholder && (
-                    <span className="badge badge--neutral">Platzhalter</span>
-                  )}
-                  {isIncomplete && (
-                    <span className="badge badge--warning">Unvollständig</span>
-                  )}
-                </div>
+                )}
+                <div className="course-card-hero-gradient" />
+                
+                {/* Badge over image */}
+                {isPilot && (
+                  <span className="course-card-badge badge badge--success">PILOT</span>
+                )}
+                {isPlaceholder && (
+                  <span className="course-card-badge badge badge--neutral">Platzhalter</span>
+                )}
+                {isIncomplete && (
+                  <span className="course-card-badge badge badge--warning">Unvollständig</span>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="card-body">
 
                 <h3>{course.title}</h3>
                 
@@ -82,3 +95,4 @@ export default function CoursesPage() {
     </div>
   );
 }
+

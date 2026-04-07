@@ -3,14 +3,15 @@
 import { useAuth } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, BookOpen, User, Settings, Users, BarChart3, HelpCircle, LogOut, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, BookOpen, User, Settings, Users, BarChart3, HelpCircle, LogOut, ClipboardList, MessageSquare } from 'lucide-react';
 import React from 'react';
 
 export function Sidebar({ isOpen, onClose }) {
-  const { Auth } = useAuth();
+  const { Auth, currentUser } = useAuth();
   const pathname = usePathname();
   const isAdmin = Auth.isAdmin();
   const isTrainer = Auth.isTrainer();
+  const isLearner = !isAdmin && !isTrainer;
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -35,19 +36,27 @@ export function Sidebar({ isOpen, onClose }) {
         <div className="sidebar-header">
           <div className="sidebar-brand">
             <img 
-              src="/logo.png" 
+              src="/Bilder/Thitronik_vektor.webp" 
               alt="THITRONIK Logo" 
-              style={{ width: '100%', maxWidth: '160px', height: 'auto' }} 
+              style={{ width: '100%', maxWidth: '160px', height: 'auto', filter: 'brightness(0) invert(1)' }} 
             />
           </div>
         </div>
 
         <div className="sidebar-content">
           <div className="sidebar-section">
-            <div className="sidebar-section-title">Lernen</div>
+            <div className="sidebar-section-title">{isLearner ? 'Lernen' : 'Plattform'}</div>
             <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
             <NavItem href="/courses" icon={BookOpen} label="Kurse" />
-            <NavItem href="/profile" icon={User} label="Mein Fortschritt" />
+            {/* Mein Fortschritt nur für Händler/Learner */}
+            {isLearner && (
+              <NavItem href="/profile" icon={User} label="Mein Fortschritt" />
+            )}
+          </div>
+
+          <div className="sidebar-section">
+            <div className="sidebar-section-title">Community</div>
+            <NavItem href="/forum" icon={MessageSquare} label="Händler-Forum" />
           </div>
 
           <div className="sidebar-section">

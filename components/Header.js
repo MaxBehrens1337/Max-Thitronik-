@@ -2,10 +2,11 @@
 
 import { useAuth } from '@/lib/auth';
 import { API } from '@/lib/store';
-import { Menu, Search, Moon, Sun, Settings, Key, LogOut } from 'lucide-react';
+import { Menu, Search, Moon, Sun, Settings, Key, LogOut, BookOpen, Cpu } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export function Header({ onMenuClick }) {
   const { Auth, currentUser } = useAuth();
@@ -105,6 +106,18 @@ export function Header({ onMenuClick }) {
           )}
         </div>
 
+        {/* Wiki Button */}
+        <Link href="/wiki" className="header-action-btn header-action-btn--neon" title="Wiki">
+          <BookOpen size={16} />
+          <span>Wiki</span>
+        </Link>
+
+        {/* THI Button */}
+        <Link href="/thi" className="header-action-btn header-action-btn--neon" title="THI">
+          <Cpu size={16} />
+          <span>THI</span>
+        </Link>
+
         {/* Theme Toggle */}
         {mounted && (
           <button 
@@ -129,7 +142,11 @@ export function Header({ onMenuClick }) {
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowProfileMenu(!showProfileMenu); }}}
           >
-            <div className="avatar">{initials}</div>
+            <div className="avatar">
+              {currentUser.profilePhoto ? (
+                <img src={currentUser.profilePhoto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '9999px' }} />
+              ) : initials}
+            </div>
             <div className="user-info">
               <span className="user-name">{currentUser.firstName}</span>
             </div>
