@@ -3,7 +3,7 @@
 import { useAuth } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, BookOpen, User, Settings, Users, BarChart3, HelpCircle, LogOut, ClipboardList, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, BookOpen, User, Settings, Users, BarChart3, HelpCircle, LogOut, ClipboardList, MessageSquare, Volume2, Gamepad2 } from 'lucide-react';
 import React from 'react';
 
 export function Sidebar({ isOpen, onClose }) {
@@ -34,13 +34,13 @@ export function Sidebar({ isOpen, onClose }) {
       <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
       <nav className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <div className="sidebar-brand">
+          <Link href="/about" className="sidebar-brand-link" onClick={onClose}>
             <img 
               src="/Bilder/Thitronik_vektor.webp" 
               alt="THITRONIK Logo" 
               style={{ width: '100%', maxWidth: '160px', height: 'auto', filter: 'brightness(0) invert(1)' }} 
             />
-          </div>
+          </Link>
         </div>
 
         <div className="sidebar-content">
@@ -48,6 +48,7 @@ export function Sidebar({ isOpen, onClose }) {
             <div className="sidebar-section-title">{isLearner ? 'Lernen' : 'Plattform'}</div>
             <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
             <NavItem href="/courses" icon={BookOpen} label="Kurse" />
+            <NavItem href="/quiz" icon={Gamepad2} label="Live-Quiz" />
             {/* Mein Fortschritt nur für Händler/Learner */}
             {isLearner && (
               <NavItem href="/profile" icon={User} label="Mein Fortschritt" />
@@ -62,6 +63,7 @@ export function Sidebar({ isOpen, onClose }) {
           <div className="sidebar-section">
             <div className="sidebar-section-title">Tools</div>
             <NavItem href="/tools/arbeitskarte" icon={ClipboardList} label="Arbeitskarte" />
+            <NavItem href="/tools/soundboard" icon={Volume2} label="Soundboard" />
           </div>
 
           {(isAdmin || isTrainer) && (

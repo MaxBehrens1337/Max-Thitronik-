@@ -61,10 +61,14 @@ export default function Dashboard() {
 
   const completedCount = coursesWithProgress.filter(c => c.progress.percent === 100).length;
 
-  const handleDcAnswer = (answer) => {
+  const handleDcAnswer = (answerKey) => {
     if (dcState.revealed || !dailyChallenge) return;
-    const isCorrect = dailyChallenge.question.correctAnswers.includes(answer);
-    setDcState({ selected: answer, revealed: true, correct: isCorrect });
+    const isNewFormat = !!dailyChallenge.question.options;
+    const isCorrect = isNewFormat 
+      ? dailyChallenge.question.options.find(o => o.id === answerKey)?.isCorrect 
+      : dailyChallenge.question.correctAnswers.includes(answerKey);
+      
+    setDcState({ selected: answerKey, revealed: true, correct: isCorrect });
   };
 
   return (
@@ -138,10 +142,17 @@ export default function Dashboard() {
             )}
 
             <div className="dc-answers">
-              {dailyChallenge.question.answers.map((answer, idx) => {
-                const isCorrect = dailyChallenge.question.correctAnswers.includes(answer);
-                const isSelected = dcState.selected === answer;
+              {(dailyChallenge.question.options || dailyChallenge.question.answers || []).map((item, idx) => {
+                const isNewFormat = !!dailyChallenge.question.options;
+                const answerKey = isNewFormat ? item.id : item;
+                const displayText = isNewFormat ? item.text : item;
+                const isCorrect = isNewFormat ? item.isCorrect : dailyChallenge.question.correctAnswers.includes(item);
+                const isSelected = dcState.selected === answerKey;
+                const isImage = typeof displayText === 'string' && displayText.match(/\.(jpeg|jpg|gif|png|webp)$/i) != null;
+
                 let answerClass = 'dc-answer';
+                if (isImage) answerClass += ' dc-answer--image';
+
                 if (dcState.revealed) {
                   if (isCorrect) answerClass += ' dc-answer--correct';
                   else if (isSelected && !isCorrect) answerClass += ' dc-answer--wrong';
@@ -150,19 +161,25 @@ export default function Dashboard() {
 
                 return (
                   <button
-                    key={idx}
+                    key={answerKey}
                     className={answerClass}
-                    onClick={() => handleDcAnswer(answer)}
+                    onClick={() => handleDcAnswer(answerKey)}
                     disabled={dcState.revealed}
+                    style={isImage ? {} : { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', textAlign: 'left', minHeight: '60px' }}
                   >
-                    <img src={answer} alt={`Antwort ${idx + 1}`} loading="lazy" />
+                    {isImage ? (
+                      <img src={displayText} alt={`Antwort ${idx + 1}`} loading="lazy" />
+                    ) : (
+                      <span style={{ paddingRight: '32px' }}>{displayText}</span>
+                    )}
+                    
                     {dcState.revealed && isCorrect && (
-                      <div className="dc-answer-icon dc-answer-icon--correct">
+                      <div className="dc-answer-icon dc-answer-icon--correct" style={isImage ? {} : { position: 'absolute', right: '16px' }}>
                         <CheckCircle size={24} />
                       </div>
                     )}
                     {dcState.revealed && isSelected && !isCorrect && (
-                      <div className="dc-answer-icon dc-answer-icon--wrong">
+                      <div className="dc-answer-icon dc-answer-icon--wrong" style={isImage ? {} : { position: 'absolute', right: '16px' }}>
                         <XCircle size={24} />
                       </div>
                     )}

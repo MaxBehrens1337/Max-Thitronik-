@@ -12,8 +12,8 @@ export function AppLayout({ children }) {
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
 
-  // Login-Seite hat kein AppLayout
-  if (pathname === '/login') {
+  // Login + Quiz Host/Player/Solo haben kein AppLayout (Fullscreen)
+  if (pathname === '/login' || pathname.startsWith('/quiz/host') || pathname.startsWith('/quiz/play') || pathname.startsWith('/quiz/solo')) {
     return <>{children}</>;
   }
 
@@ -35,7 +35,7 @@ export function AppLayout({ children }) {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="main-content">
         <Header onMenuClick={() => setSidebarOpen(true)} />
-        <main id="main-content" className="page-content" style={{ padding: 'var(--sp-6) var(--sp-4)', flex: 1, overflowY: 'auto' }}>
+        <main id="main-content" className="page-content">
           <div className="container">
             {children}
           </div>
